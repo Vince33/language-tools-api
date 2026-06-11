@@ -58,3 +58,49 @@ def test_response_contains_original_text(base_url):
 
     assert response.status_code == 200
     assert response.json()["text"] == text
+
+def test_missing_text_field_returns_422(base_url):
+    """Request with no text field should return 422 validation error."""
+    response = requests.post(
+        f"{base_url}/detect-language",
+        json={}
+    )
+
+    assert response.status_code == 422
+
+def test_wrong_http_method_returns_405(base_url):
+    """GET request to POST endpoint should return 405 method not allowed."""
+    response = requests.get(f"{base_url}/detect-language")
+    
+    assert response.status_code == 405
+    
+def test_noneexistent_endpoint_returns_404(base_url):
+    """Request to unkown endpoint should return 404."""
+    response = requests.get(f"{base_url}/nonexistent")
+
+    assert response.status_code == 404
+
+def test_single_word_input(base_url):
+    """Single word input should still return a response without crashing."""
+    response = requests.post(
+        f"{base_url}/detect-language",
+        json={"text": "Hello"}
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+    assert "language" in data 
+    assert "success" in data
+
+    
+def test_numeric_characters_returns_response(base_url):
+    """Text containing only numbers should return a resoponse without crashing."""
+    response = requests.post(
+        f"{base_url}/detect-language",
+        json={"text": "1234567890"}
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+    assert "language" in data     
+    
