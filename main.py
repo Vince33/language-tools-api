@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from langdetect import detect, LangDetectException
 import re 
+import textstat
 
 # Create the FastAPI application instance
 app = FastAPI(
@@ -81,4 +82,49 @@ def analyze_text(request: AnalyzeRequest):
         sentence_count=sentence_count,
         character_count=character_count,
         character_count_no_spaces=character_count_no_spaces
+    )
+
+class ReadabilityRequest(BaseModel):
+    text: str
+
+class ReadabilityResponse(BaseModel):
+    text: str
+    flesch_reading_ease: float
+    flesch_kincaid_grade: float
+    reading_ease_label: str
+
+def get_reading_ease_label(score: float) -> str:
+    """Convert a Flesch Reading Ease score to a human readable label."""
+    if score >= 90:
+        return "Very Easy"
+    elif score >= 70:
+        return "Easy"
+    elif score >= 60:
+        return "Standard"
+    elif score >= 50:
+        return "Fairly Difficult"
+    elif score >= 30:
+        return "Difficult"
+    else:
+        return "Very Difficult"
+
+@app.post("/readability", response_model=ReadabilityResponse)
+def analyze_readability(request: ReadabilityRequest):
+    """
+    Analyze the readability of the provided text.
+
+    Returns Flesch Reading Ease score (0-100, higher is easier)
+    and Flesch-Kincaid Grade Level (US school grade equivalent).
+    """
+    text = request.text
+
+    flesch_ease = textstat.flesch_reading_ease(text)
+    flesch_grade = textstat.flesch_kincaid_grade(text)
+    label = get_reading_ease_label(flesch_ease)
+
+    return ReadabilityResponse(
+        text=text,
+        flesch_reading_ease=flesch_ease,
+        flesch_kincaid_grade=flesch_grade,
+        reading_ease_label=label
     )
