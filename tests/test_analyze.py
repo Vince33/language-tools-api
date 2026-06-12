@@ -27,6 +27,20 @@ def test_analyze_response_has_correct_structure(base_url):
     assert isinstance(data["character_count"], int)
     assert isinstance(data["character_count_no_spaces"], int)
 
+def test_analyze_correct_counts(base_url):
+    """Counts should be correct for a known input."""
+    response = requests.post(
+        f"{base_url}/analyze-text",
+        json={"text": "Hello world. This is a test."}
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["word_count"] == 6  # "Hello", "world", "This", "is", "a", "test"
+    assert data["sentence_count"] == 2  # "Hello world." and "This is a test."
+    assert data["character_count"] == 28  # Total characters including spaces and punctuation
+    assert data["character_count_no_spaces"] == 23  # Total characters excluding spaces
+
 def test_analyze_empty_text_returns_zero_counts(base_url):
     """Empty text should return zero counts for all metrics."""
     response = requests.post(
@@ -62,6 +76,17 @@ def test_analyze_numeric_text(base_url):
     assert data["word_count"] == 3  # "123", "456", "7890"
     assert data["character_count"] == 12  # 3 digits + 1 space + 3 digits + 1 space + 4 digits"
     assert data["character_count_no_spaces"] == 10  # Only digits, no spaces
+
+def test_analyze_single_sentence_no_punctuation(base_url):
+    """Text with no punctuation should count as one sentence."""
+    response = requests.post(
+        f"{base_url}/analyze-text",
+        json={"text": "This is a single sentence without punctuation"}
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["sentence_count"] == 1
 
 def test_analyze_punctuation_text(base_url):
     """Text ending with ? or ! should correctly count as separate sentences."""
