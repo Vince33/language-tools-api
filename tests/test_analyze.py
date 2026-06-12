@@ -64,13 +64,13 @@ def test_analyze_numeric_text(base_url):
     assert data["character_count_no_spaces"] == 10  # Only digits, no spaces
 
 def test_analyze_punctuation_text(base_url):
-    """Text ending with ? or ! should count as zero sentences — known limitation."""
+    """Text ending with ? or ! should correctly count as separate sentences."""
     response = requests.post(
         f"{base_url}/analyze-text",
-        json={"text": "How are you? I am fine."}
+        json={"text": "How are you? I am fine!"}
     )
 
     assert response.status_code == 200
     data = response.json()
-    assert data["sentence_count"] == 1 
+    assert data["sentence_count"] == 2
     

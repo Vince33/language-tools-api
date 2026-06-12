@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from langdetect import detect, LangDetectException
+import re 
 
 # Create the FastAPI application instance
 app = FastAPI(
@@ -70,7 +71,7 @@ def analyze_text(request: AnalyzeRequest):
     text = request.text
     
     word_count = len(text.split()) if text.strip() else 0
-    sentence_count = len([s for s in text.split(".") if s.strip()]) if text.strip() else 0
+    sentence_count = len([s for s in re.split(r'[.!?]+', text) if s.strip()]) if text.strip() else 0
     character_count = len(text)
     character_count_no_spaces = len(text.replace(" ", ""))
     
