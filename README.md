@@ -51,6 +51,14 @@ Tests are organized by concern across four files:
 Coverage follows the testing pyramid — unit tests for pure function logic, 
 API tests for contract, functional, validation, and edge case layers.
 
+## Testing with Postman
+
+A Postman collection is included in the repository (`postman_collection.json`) with pre-built requests for all API endpoints. Import it into Postman to manually test and explore the API without writing any code.
+
+## Development tooling
+
+[Claude Code](https://claude.ai/code) is used as a development assistant throughout this project — for generating and refining tests, exploring endpoint behavior, and iterating on implementation.
+
 ## Tech stack
 
 - Python 3.13
