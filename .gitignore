@@ -2,3 +2,5 @@ __pycache__/
 .venv/
 .env
 settings.local.json
+*.playwright-mcp
+.vscode/
