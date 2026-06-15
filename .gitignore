@@ -1,4 +1,4 @@
 __pycache__/
 .venv/
-.envsettings.local.json
+.env
 settings.local.json
