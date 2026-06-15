@@ -57,7 +57,7 @@ A Postman collection is included in the repository (`postman_collection.json`) w
 
 ## Development tooling
 
-[Claude Code](https://claude.ai/code) is used as a development assistant throughout this project — for generating and refining tests, exploring endpoint behavior, and iterating on implementation.
+[Claude Code](https://claude.ai/code) is used as a development assistant throughout this project — for generating and refining tests, exploring endpoint behavior, and iterating on implementation. Custom commands for common tasks are available in `.claude/commands/`.
 
 ## Tech stack
 
