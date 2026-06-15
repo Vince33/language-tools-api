@@ -17,6 +17,17 @@ Flesch-Kincaid grade level scoring is a quantitative measure of text
 complexity, relevant to comprehensible input theory and language learning 
 contexts.
 
+## Authentication
+
+All endpoints require an API key passed in the `X-API-Key` request header.
+
+```
+X-API-Key: your-api-key
+```
+
+Set the key server-side via the `API_KEY` environment variable. Requests with 
+a missing key return `401`; requests with an incorrect key return `403`.
+
 ## Endpoints
 
 **POST /detect-language**
@@ -81,14 +92,18 @@ pip install -r requirements.txt
 ## Running the server
 
 ```bash
-uvicorn main:app --reload
+API_KEY=your-api-key uvicorn main:app --reload
 ```
 
 Interactive API documentation available at `http://127.0.0.1:8000/docs`
 
 ## Running the tests
 
+The server must be running with `API_KEY=test-secret-key` before invoking pytest, 
+since the API tests hit a live server and use that key in request headers.
+
 ```bash
+API_KEY=test-secret-key uvicorn main:app &
 pytest tests/ -v
 ```
 

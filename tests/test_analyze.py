@@ -1,37 +1,40 @@
 import requests
 
-def test_analyze_response_code_valid_input(base_url):
+def test_analyze_response_code_valid_input(base_url, auth_headers):
     """Valid input should return 200 OK."""
     response = requests.post(
         f"{base_url}/analyze-text",
-        json={"text": "Hello world. This is a test."}
+        json={"text": "Hello world. This is a test."},
+        headers=auth_headers,
     )
 
     assert response.status_code == 200
 
-def test_analyze_response_has_correct_structure(base_url):
+def test_analyze_response_has_correct_structure(base_url, auth_headers):
     """Response should contain all expected fields with correct types."""
     response = requests.post(
         f"{base_url}/analyze-text",
-        json={"text": "Hello world. This is a test."}
+        json={"text": "Hello world. This is a test."},
+        headers=auth_headers,
     )
 
     data = response.json()
     assert "text" in data
-    assert "word_count" in data 
+    assert "word_count" in data
     assert "sentence_count" in data
-    assert "character_count" in data 
+    assert "character_count" in data
     assert "character_count_no_spaces" in data
     assert isinstance(data["word_count"], int)
     assert isinstance(data["sentence_count"], int)
     assert isinstance(data["character_count"], int)
     assert isinstance(data["character_count_no_spaces"], int)
 
-def test_analyze_correct_counts(base_url):
+def test_analyze_correct_counts(base_url, auth_headers):
     """Counts should be correct for a known input."""
     response = requests.post(
         f"{base_url}/analyze-text",
-        json={"text": "Hello world. This is a test."}
+        json={"text": "Hello world. This is a test."},
+        headers=auth_headers,
     )
 
     assert response.status_code == 200
@@ -41,11 +44,12 @@ def test_analyze_correct_counts(base_url):
     assert data["character_count"] == 28  # Total characters including spaces and punctuation
     assert data["character_count_no_spaces"] == 23  # Total characters excluding spaces
 
-def test_analyze_empty_text_returns_zero_counts(base_url):
+def test_analyze_empty_text_returns_zero_counts(base_url, auth_headers):
     """Empty text should return zero counts for all metrics."""
     response = requests.post(
         f"{base_url}/analyze-text",
-        json={"text": ""}
+        json={"text": ""},
+        headers=auth_headers,
     )
 
     assert response.status_code == 200
@@ -55,20 +59,22 @@ def test_analyze_empty_text_returns_zero_counts(base_url):
     assert data["character_count"] == 0
     assert data["character_count_no_spaces"] == 0
 
-def test_analyze_missing_text_field_returns_422(base_url):
+def test_analyze_missing_text_field_returns_422(base_url, auth_headers):
     """Request with no text field should return 422 validation error."""
     response = requests.post(
         f"{base_url}/analyze-text",
-        json={}
+        json={},
+        headers=auth_headers,
     )
 
     assert response.status_code == 422
 
-def test_analyze_numeric_text(base_url):
+def test_analyze_numeric_text(base_url, auth_headers):
     """Numeric text should retrurn correct character and word counts."""
     response = requests.post(
         f"{base_url}/analyze-text",
-        json={"text": "123 456 7890"}
+        json={"text": "123 456 7890"},
+        headers=auth_headers,
     )
 
     assert response.status_code == 200
@@ -77,25 +83,26 @@ def test_analyze_numeric_text(base_url):
     assert data["character_count"] == 12  # 3 digits + 1 space + 3 digits + 1 space + 4 digits"
     assert data["character_count_no_spaces"] == 10  # Only digits, no spaces
 
-def test_analyze_single_sentence_no_punctuation(base_url):
+def test_analyze_single_sentence_no_punctuation(base_url, auth_headers):
     """Text with no punctuation should count as one sentence."""
     response = requests.post(
         f"{base_url}/analyze-text",
-        json={"text": "This is a single sentence without punctuation"}
+        json={"text": "This is a single sentence without punctuation"},
+        headers=auth_headers,
     )
 
     assert response.status_code == 200
     data = response.json()
     assert data["sentence_count"] == 1
 
-def test_analyze_punctuation_text(base_url):
+def test_analyze_punctuation_text(base_url, auth_headers):
     """Text ending with ? or ! should correctly count as separate sentences."""
     response = requests.post(
         f"{base_url}/analyze-text",
-        json={"text": "How are you? I am fine!"}
+        json={"text": "How are you? I am fine!"},
+        headers=auth_headers,
     )
 
     assert response.status_code == 200
     data = response.json()
     assert data["sentence_count"] == 2
-    
