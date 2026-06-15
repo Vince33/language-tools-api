@@ -1,0 +1,124 @@
+- generic [ref=e3]:
+  - generic:
+    - img
+  - generic [ref=e4]:
+    - generic [ref=e7]:
+      - generic [ref=e8]:
+        - heading "Language Tools API 0.1.0 OAS 3.1" [level=1] [ref=e9]:
+          - text: Language Tools API
+          - generic [ref=e10]:
+            - generic [ref=e12]: 0.1.0
+            - generic [ref=e14]: OAS 3.1
+        - link "/openapi.json" [ref=e15] [cursor=pointer]:
+          - /url: /openapi.json
+          - generic [ref=e16]: /openapi.json
+      - paragraph [ref=e19]: A utility API for language detection and analysis
+    - generic [ref=e24]:
+      - heading "default Collapse operation" [level=3] [ref=e25] [cursor=pointer]:
+        - link "default" [ref=e26]:
+          - /url: "#/default"
+        - button "Collapse operation" [expanded] [ref=e27]:
+          - img [ref=e28]
+      - generic [ref=e31]:
+        - generic [ref=e34] [cursor=pointer]:
+          - button "GET /health Health Check" [ref=e35]:
+            - generic [ref=e36]: GET
+            - generic [ref=e37]:
+              - link "/health" [ref=e39]:
+                - /url: "#/default/health_check_health_get"
+              - generic [ref=e40]: Health Check
+          - generic "Copy to clipboard"
+          - button "get /health" [ref=e43]:
+            - img [ref=e44]
+        - generic [ref=e48] [cursor=pointer]:
+          - button "POST /detect-language Detect Language" [ref=e49]:
+            - generic [ref=e50]: POST
+            - generic [ref=e51]:
+              - link "/detect-language" [ref=e53]:
+                - /url: "#/default/detect_language_detect_language_post"
+              - generic [ref=e54]: Detect Language
+          - generic "Copy to clipboard"
+          - button "post /detect-language" [ref=e57]:
+            - img [ref=e58]
+        - generic [ref=e62] [cursor=pointer]:
+          - button "POST /analyze-text Analyze Text" [ref=e63]:
+            - generic [ref=e64]: POST
+            - generic [ref=e65]:
+              - link "/analyze-text" [ref=e67]:
+                - /url: "#/default/analyze_text_analyze_text_post"
+              - generic [ref=e68]: Analyze Text
+          - generic "Copy to clipboard"
+          - button "post /analyze-text" [ref=e71]:
+            - img [ref=e72]
+        - generic [ref=e76] [cursor=pointer]:
+          - button "POST /readability Analyze Readability" [ref=e77]:
+            - generic [ref=e78]: POST
+            - generic [ref=e79]:
+              - link "/readability" [ref=e81]:
+                - /url: "#/default/analyze_readability_readability_post"
+              - generic [ref=e82]: Analyze Readability
+          - generic "Copy to clipboard"
+          - button "post /readability" [ref=e85]:
+            - img [ref=e86]
+    - generic [ref=e90]:
+      - heading "Schemas" [level=4] [ref=e91] [cursor=pointer]:
+        - button "Schemas" [expanded] [ref=e92]:
+          - generic [ref=e93]: Schemas
+          - img [ref=e94]
+      - generic [ref=e96]:
+        - article [ref=e97]:
+          - generic [ref=e98]:
+            - button "AnalyzeRequest" [ref=e99] [cursor=pointer]:
+              - generic [ref=e101]: AnalyzeRequest
+              - img [ref=e103]
+            - button "Expand all" [ref=e105] [cursor=pointer]
+            - strong [ref=e106]: object
+        - article [ref=e107]:
+          - generic [ref=e108]:
+            - button "AnalyzeResponse" [ref=e109] [cursor=pointer]:
+              - generic [ref=e111]: AnalyzeResponse
+              - img [ref=e113]
+            - button "Expand all" [ref=e115] [cursor=pointer]
+            - strong [ref=e116]: object
+        - article [ref=e117]:
+          - generic [ref=e118]:
+            - button "DetectRequest" [ref=e119] [cursor=pointer]:
+              - generic [ref=e121]: DetectRequest
+              - img [ref=e123]
+            - button "Expand all" [ref=e125] [cursor=pointer]
+            - strong [ref=e126]: object
+        - article [ref=e127]:
+          - generic [ref=e128]:
+            - button "DetectResponse" [ref=e129] [cursor=pointer]:
+              - generic [ref=e131]: DetectResponse
+              - img [ref=e133]
+            - button "Expand all" [ref=e135] [cursor=pointer]
+            - strong [ref=e136]: object
+        - article [ref=e137]:
+          - generic [ref=e138]:
+            - button "HTTPValidationError" [ref=e139] [cursor=pointer]:
+              - generic [ref=e141]: HTTPValidationError
+              - img [ref=e143]
+            - button "Expand all" [ref=e145] [cursor=pointer]
+            - strong [ref=e146]: object
+        - article [ref=e147]:
+          - generic [ref=e148]:
+            - button "ReadabilityRequest" [ref=e149] [cursor=pointer]:
+              - generic [ref=e151]: ReadabilityRequest
+              - img [ref=e153]
+            - button "Expand all" [ref=e155] [cursor=pointer]
+            - strong [ref=e156]: object
+        - article [ref=e157]:
+          - generic [ref=e158]:
+            - button "ReadabilityResponse" [ref=e159] [cursor=pointer]:
+              - generic [ref=e161]: ReadabilityResponse
+              - img [ref=e163]
+            - button "Expand all" [ref=e165] [cursor=pointer]
+            - strong [ref=e166]: object
+        - article [ref=e167]:
+          - generic [ref=e168]:
+            - button "ValidationError" [ref=e169] [cursor=pointer]:
+              - generic [ref=e171]: ValidationError
+              - img [ref=e173]
+            - button "Expand all" [ref=e175] [cursor=pointer]
+            - strong [ref=e176]: object
