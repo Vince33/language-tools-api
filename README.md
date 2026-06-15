@@ -91,19 +91,24 @@ pip install -r requirements.txt
 
 ## Running the server
 
+Copy `.env.example` to `.env` and set your key:
+
 ```bash
-API_KEY=your-api-key uvicorn main:app --reload
+cp .env.example .env
+# edit .env and set API_KEY=your-api-key
+uvicorn main:app --reload
 ```
 
 Interactive API documentation available at `http://127.0.0.1:8000/docs`
 
 ## Running the tests
 
-The server must be running with `API_KEY=test-secret-key` before invoking pytest, 
-since the API tests hit a live server and use that key in request headers.
+The server must be running before invoking pytest, since the API tests hit a live 
+server. Set `API_KEY` in your `.env` file (or inline) and use `test-secret-key` 
+as the value — that's what the test fixtures send in request headers.
 
 ```bash
-API_KEY=test-secret-key uvicorn main:app &
+uvicorn main:app &   # reads API_KEY from .env
 pytest tests/ -v
 ```
 

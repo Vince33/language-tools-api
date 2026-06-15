@@ -1,10 +1,13 @@
 from fastapi import FastAPI, Security, HTTPException, Depends
 from fastapi.security import APIKeyHeader
 from pydantic import BaseModel
+from dotenv import load_dotenv
 from langdetect import detect, LangDetectException
 import re
 import os
 import textstat
+
+load_dotenv()
 
 _api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 
