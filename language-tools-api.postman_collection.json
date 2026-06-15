@@ -1,0 +1,105 @@
+{
+  "info": {
+    "name": "Language Tools API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Language detection, text analysis, and readability scoring endpoints."
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/health",
+          "host": ["{{base_url}}"],
+          "path": ["health"]
+        }
+      }
+    },
+    {
+      "name": "Detect Language",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/detect-language",
+          "host": ["{{base_url}}"],
+          "path": ["detect-language"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"text\": \"The quick brown fox jumps over the lazy dog.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Analyze Text",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/analyze-text",
+          "host": ["{{base_url}}"],
+          "path": ["analyze-text"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"text\": \"The quick brown fox jumps over the lazy dog. It was a sunny day.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Readability",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/readability",
+          "host": ["{{base_url}}"],
+          "path": ["readability"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"text\": \"The quick brown fox jumps over the lazy dog. It was a sunny day.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    }
+  ]
+}
