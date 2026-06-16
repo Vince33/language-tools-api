@@ -52,3 +52,9 @@ CI (`.github/workflows/tests.yml`) starts the server with `uvicorn main:app &` a
 
 - Flesch scores can legitimately fall outside 0–100 for very simple or very complex text — this is expected formula behavior.
 - `langdetect` detection quality degrades on short or ambiguous input; single-word tests assert only that a response is returned, not the specific language.
+
+## Design Decisions
+- Request models (DetectRequest, AnalyzeRequest, ReadabilityRequest) 
+  are intentionally kept separate despite sharing the same text field.
+  They are expected to diverge as the API grows. 
+  Revisit consolidation if no divergence by late 2026.
