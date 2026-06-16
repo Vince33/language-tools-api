@@ -57,7 +57,7 @@ def test_readability_standard_text(base_url, auth_headers):
 
     assert response.status_code == 200
     data = response.json()
-    assert data["reading_ease_label"] in ["Easy", "Standard","Difficult","Fairly Difficult"]
+    assert data["reading_ease_label"] in ["Difficult"]
 
 def test_readability_misshing_text_field_returns_422(base_url, auth_headers):
     """Request with no text field should return 422 validation error."""
