@@ -47,6 +47,12 @@ text, along with a human-readable difficulty label. Scores can exceed the
 standard 0-100 range for very simple or very complex text — this is expected 
 behavior of the formula, not an error.
 
+**POST /linguistic-analysis**
+Returns structural linguistic properties of provided text using spaCy — 
+average dependency tree depth (sentence structural complexity), lexical 
+diversity (type-token ratio), and noun-to-verb ratio. These are exploratory 
+structural signals, not a calibrated composite score like Flesch-Kincaid.
+
 **GET /health**
 Standard health check endpoint.
 
@@ -58,6 +64,7 @@ Tests are organized by concern across four files:
 - `tests/test_analyze.py` — text analysis endpoint  
 - `tests/test_readability.py` — readability endpoint
 - `tests/test_label_logic.py` — unit tests for readability label logic
+- `tests/test_linguistic_analysis.py` — linguistic analysis endpoint
 
 Coverage follows the testing pyramid — unit tests for pure function logic, 
 API tests for contract, functional, validation, and edge case layers.
@@ -78,6 +85,7 @@ A Postman collection is included in the repository (`postman_collection.json`) w
 - langdetect
 - textstat
 - pytest
+- spaCy
 
 ## Setup
 
