@@ -6,9 +6,10 @@ from langdetect import detect, LangDetectException
 import re
 import os
 import textstat
+import spacy
 
 load_dotenv()
-
+nlp = spacy.load("en_core_web_sm")
 _api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 
 def verify_api_key(api_key: str = Security(_api_key_header)):
@@ -140,4 +141,63 @@ def analyze_readability(request: ReadabilityRequest):
         flesch_reading_ease=flesch_ease,
         flesch_kincaid_grade=flesch_grade,
         reading_ease_label=label
+    )
+
+class LinguisticAnalysisRequest(BaseModel):
+    text: str
+
+class LinguisticAnalysisResponse(BaseModel):
+    text: str
+    average_dependency_depth: float
+    lexical_diversity: float
+    noun_to_verb_ratio: float
+
+def get_dependency_depth(token):
+    """Recursively calculate the depth of a token in the dependency tree."""
+    if not list(token.children):
+        return 1
+    return 1 + max(get_dependency_depth(child) for child in token.children)
+
+@app.post("/linguistic-analysis", response_model=LinguisticAnalysisResponse)
+def linguistic_analysis(request: LinguisticAnalysisRequest):
+    """
+    Analyze structural linguistic properties of the provided text using spaCy.
+    
+    Returns average dependency tree depth (sentence structural complexity),
+    lexical diversity (vocabulary variety), and noun-to-verb ratio.
+    """
+    text = request.text
+    
+    if not text.strip():
+        return LinguisticAnalysisResponse(
+            text=text,
+            average_dependency_depth=0.0,
+            lexical_diversity=0.0,
+            noun_to_verb_ratio=0.0
+        )
+    
+    doc = nlp(text)
+    
+    # Average dependency tree depth across sentences
+    depths = []
+    for sent in doc.sents:
+        root = sent.root
+        depths.append(get_dependency_depth(root))
+    avg_depth = sum(depths) / len(depths) if depths else 0.0
+    
+    # Lexical diversity (type-token ratio)
+    words = [token.text.lower() for token in doc if token.is_alpha]
+    unique_words = set(words)
+    diversity = len(unique_words) / len(words) if words else 0.0
+    
+    # Noun to verb ratio
+    noun_count = sum(1 for token in doc if token.pos_ == "NOUN")
+    verb_count = sum(1 for token in doc if token.pos_ == "VERB")
+    ratio = noun_count / verb_count if verb_count > 0 else 0.0
+    
+    return LinguisticAnalysisResponse(
+        text=text,
+        average_dependency_depth=round(avg_depth, 2),
+        lexical_diversity=round(diversity, 2),
+        noun_to_verb_ratio=round(ratio, 2)
     )
