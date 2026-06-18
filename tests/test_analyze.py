@@ -106,3 +106,22 @@ def test_analyze_punctuation_text(base_url, auth_headers):
     assert response.status_code == 200
     data = response.json()
     assert data["sentence_count"] == 2
+
+def test_missing_api_key_returns_401(base_url):
+    """Request with no API key should return 401."""
+    response = requests.post(
+        f"{base_url}/analyze-text",
+        json={"text": "Hello world"},
+    )
+
+    assert response.status_code == 401
+
+def test_invalid_api_key_returns_403(base_url):
+    """Request with wrong API key should return 403."""
+    response = requests.post(
+        f"{base_url}/analyze-text",
+        json={"text": "Hello world"},
+        headers={"X-API-Key": "wrong-key"},
+    )
+
+    assert response.status_code == 403
