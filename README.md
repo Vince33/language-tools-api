@@ -53,6 +53,13 @@ average dependency tree depth (sentence structural complexity), lexical
 diversity (type-token ratio), and noun-to-verb ratio. These are exploratory 
 structural signals, not a calibrated composite score like Flesch-Kincaid.
 
+Supports English and Spanish. An optional `language` field accepts `en` or 
+`es`; if omitted, the language is auto-detected. An explicit `language` value 
+outside the supported set, or auto-detected text in an unsupported language, 
+returns a `400` error rather than silently defaulting — nothing is guessed 
+without telling the caller. Empty text returns `language: null` along with 
+zeroed metrics, since no language can be determined from nothing.
+
 **GET /health**
 Standard health check endpoint.
 
