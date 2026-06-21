@@ -9,7 +9,15 @@ import textstat
 import spacy
 
 load_dotenv()
-nlp = spacy.load("en_core_web_sm")
+SUPPORTED_LANGUAGES = {
+    "en": "en_core_web_sm",
+    "es": "es_core_news_sm",
+}
+
+nlp_models = {
+    lang: spacy.load(model_name) 
+    for lang, model_name in SUPPORTED_LANGUAGES.items()
+}
 _api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 
 def verify_api_key(api_key: str = Security(_api_key_header)):
@@ -145,9 +153,11 @@ def analyze_readability(request: ReadabilityRequest):
 
 class LinguisticAnalysisRequest(BaseModel):
     text: str
+    language: str | None = None
 
 class LinguisticAnalysisResponse(BaseModel):
     text: str
+    language: str | None
     average_dependency_depth: float
     lexical_diversity: float
     noun_to_verb_ratio: float
@@ -163,19 +173,40 @@ def linguistic_analysis(request: LinguisticAnalysisRequest):
     """
     Analyze structural linguistic properties of the provided text using spaCy.
     
-    Returns average dependency tree depth (sentence structural complexity),
-    lexical diversity (vocabulary variety), and noun-to-verb ratio.
+    Supports English and Spanish. If language is not specified, it is 
+    auto-detected. Returns average dependency tree depth (sentence structural 
+    complexity), lexical diversity (vocabulary variety), and noun-to-verb ratio.
     """
     text = request.text
-    
+    language = request.language
+
     if not text.strip():
         return LinguisticAnalysisResponse(
             text=text,
+            language=None,
             average_dependency_depth=0.0,
             lexical_diversity=0.0,
             noun_to_verb_ratio=0.0
         )
+
+    if language is not None and language not in SUPPORTED_LANGUAGES:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unsupported language: '{language}'. Currently supported languages: {', '.join(SUPPORTED_LANGUAGES.keys())}"
+        )
+    if language is None:
+        detected = detect(text)
+        if detected not in SUPPORTED_LANGUAGES:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Detected language '{detected}' is not supported. Currently supported languages: {', '.join(SUPPORTED_LANGUAGES.keys())}"
+            )
+        language = detected
+
+
+
     
+    nlp = nlp_models.get(language)
     doc = nlp(text)
     
     # Average dependency tree depth across sentences
@@ -197,6 +228,7 @@ def linguistic_analysis(request: LinguisticAnalysisRequest):
     
     return LinguisticAnalysisResponse(
         text=text,
+        language=language,
         average_dependency_depth=round(avg_depth, 2),
         lexical_diversity=round(diversity, 2),
         noun_to_verb_ratio=round(ratio, 2)
