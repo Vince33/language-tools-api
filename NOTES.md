@@ -48,3 +48,59 @@ auth headers and all).
 Coverage tooling kept installed for future use, but the current 58% figure 
 should not be read as a meaningful measure of test thoroughness given the 
 out-of-process architecture.
+
+## Design decision — empty string language treated as unspecified
+
+While running a systematic specification-based testing pass on the 
+`language` parameter for `/linguistic-analysis` (following the 
+equivalence-partitioning process from Aniche's *Effective Software 
+Testing*), an untested partition surfaced: `language` explicitly set to 
+an empty string `""`, distinct from `language` omitted entirely or set 
+to `null`.
+
+### The question
+
+Should `language: ""` be treated as:
+- An explicit but invalid value, same as `language: "fr"` → reject with 400
+- The functional equivalent of "no preference specified" → trigger auto-detection
+
+Both are internally consistent positions. The original implementation 
+took the first approach by accident — `""` simply fell into the 
+`language not in SUPPORTED_LANGUAGES` check and got rejected with the 
+same error as any other unsupported code.
+
+### Decision
+
+Treat `language: ""` as equivalent to omission, triggering auto-detection. 
+Reasoning: a caller sending an explicit unsupported code like `"fr"` is 
+making an active (if mistaken) request for a specific language. A caller 
+sending an empty string is far more likely to have an empty form field, 
+an uninitialized variable, or a default placeholder — functionally closer 
+to "didn't specify anything" than "specified something wrong." Treating 
+both the same way (rejecting both) would be technically defensible but 
+arguably less helpful to the caller in the more common real-world case.
+
+### Implementation
+
+A normalization step added immediately after the empty-text guard, before 
+any validation or detection logic runs:
+
+```python
+if language == "":
+    language = None
+```
+
+This routes `""` into the exact same downstream path as omission or 
+explicit `null`, without duplicating or branching the validation logic.
+
+### Process note
+
+This decision emerged from formally walking through equivalence 
+partitioning on the `language` parameter — null/omitted, empty string, 
+supported codes, unsupported codes — rather than from a bug report or 
+manual testing. The previous test suite (58 tests, all passing) had not 
+covered this partition at all; "language as empty string" was a genuine 
+blind spot in test coverage despite the endpoint otherwise being 
+thoroughly tested. Confirms the value of systematic partition-based 
+review even on code that already has a comprehensive, passing test 
+suite — passing tests only prove the cases you thought to write.
