@@ -188,6 +188,9 @@ def linguistic_analysis(request: LinguisticAnalysisRequest):
             lexical_diversity=0.0,
             noun_to_verb_ratio=0.0
         )
+    
+    if language == "":
+         language = None
 
     if language is not None and language not in SUPPORTED_LANGUAGES:
         raise HTTPException(

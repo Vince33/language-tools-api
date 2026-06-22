@@ -33,6 +33,15 @@ def test_linguistic_analysis_missing_text_field_returns_422(base_url, auth_heade
     )
     assert response.status_code == 422
 
+def test_linguistic_analysis_null_text_returns_422(base_url, auth_headers):
+    """Request with text explicitly set to null should return 422."""
+    response = requests.post(
+        f"{base_url}/linguistic-analysis",
+        json={"text": None},
+        headers=auth_headers
+    )
+    assert response.status_code == 422
+
 def test_linguistic_analysis_wrong_method_returns_405(base_url):
     """GET request to POST endpoint should return 405 method not allowed."""
     response = requests.get(f"{base_url}/linguistic-analysis")
@@ -159,6 +168,17 @@ def test_auto_detect_english_language_returns_language_code_and_200(base_url, au
         headers=auth_headers,
     )
 
+    assert response.status_code == 200
+    data = response.json()
+    assert data["language"] == "en"
+    
+def test_empty_string_language_triggers_auto_detection(base_url, auth_headers):
+    """Empty string language should be treated as unspecified, triggering auto-detection."""
+    response = requests.post(
+        f"{base_url}/linguistic-analysis",
+        json={"text": "This is a test sentence for auto detection.", "language": ""},
+        headers=auth_headers,
+    )
     assert response.status_code == 200
     data = response.json()
     assert data["language"] == "en"
