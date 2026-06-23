@@ -32,7 +32,7 @@ like a statement about test thoroughness; it's actually an artifact of test
 architecture (out-of-process HTTP testing vs in-process testing), not a 
 reflection of which code paths are genuinely exercised.
 
-### What would fix it (now implemented)
+### What would fix it (not implemented)
 
 Using FastAPI's `TestClient` to run the app in-process rather than against 
 a separately started `uvicorn` server would let `coverage` observe execution 
@@ -63,12 +63,9 @@ test to fail with 403 in CI despite passing locally; and a header name typo
 literal string "None" as the API key. Both fixed by setting `API_KEY` at 
 the job level in the GitHub Actions workflow and correcting the header name.
 
-### Status - resolved now 100% coverage
+### Status
 
-`.coverage` (the binary data file pytest-cov generates) added to `.gitignore`. 
-Coverage tooling kept installed for future use, but the current 58% figure 
-should not be read as a meaningful measure of test thoroughness given the 
-out-of-process architecture.
+Resolved. `.coverage` added to `.gitignore`.
 
 ## Design decision — empty string language treated as unspecified
 
