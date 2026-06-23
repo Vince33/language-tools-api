@@ -16,6 +16,6 @@ def test_server_is_up_and_responds():
     response = requests.post(
         f"{BASE_URL}/analyze-text",
         json={"text": "Hello world!"},
-        headers={"X-API-key": API_KEY}
+        headers={"X-API-Key": API_KEY}
     )
     assert response.status_code == 200

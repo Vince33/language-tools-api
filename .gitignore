@@ -6,3 +6,4 @@ settings.local.json
 .vscode/
 .coverage
 .hypothesis 
+.pytest_cache
