@@ -1,10 +1,12 @@
 import pytest
+from fastapi.testclient import TestClient
+from main import app
 
 TEST_API_KEY = "test-secret-key"
 
 @pytest.fixture
-def base_url():
-    return "http://127.0.0.1:8000"
+def client():
+    return TestClient(app)
 
 @pytest.fixture
 def auth_headers():
