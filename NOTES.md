@@ -63,7 +63,7 @@ test to fail with 403 in CI despite passing locally; and a header name typo
 literal string "None" as the API key. Both fixed by setting `API_KEY` at 
 the job level in the GitHub Actions workflow and correcting the header name.
 
-### Status
+### Status - resolved now 100% coverage
 
 `.coverage` (the binary data file pytest-cov generates) added to `.gitignore`. 
 Coverage tooling kept installed for future use, but the current 58% figure 
