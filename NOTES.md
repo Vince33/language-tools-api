@@ -32,7 +32,7 @@ like a statement about test thoroughness; it's actually an artifact of test
 architecture (out-of-process HTTP testing vs in-process testing), not a 
 reflection of which code paths are genuinely exercised.
 
-### What would fix it (not implemented)
+### What would fix it (now implemented)
 
 Using FastAPI's `TestClient` to run the app in-process rather than against 
 a separately started `uvicorn` server would let `coverage` observe execution 
@@ -41,6 +41,27 @@ unit/integration testing than the current black-box HTTP/contract-testing
 approach — and was not pursued here, since the current approach has its own 
 legitimate value (testing the app exactly as a real client would call it, 
 auth headers and all).
+
+### Update — resolved
+
+Migrated the majority of the test suite from live-server `requests` calls 
+to FastAPI's `TestClient`, which runs in-process and is correctly observed 
+by `coverage`. A single true end-to-end smoke test (`test_smoke.py`) was 
+kept separately, requiring a live server, to preserve genuine full-stack 
+verification alongside the now-accurate in-process suite.
+
+Coverage after migration: 100%, all 119 statements in main.py, confirming 
+the original 58% figure was entirely an artifact of test architecture, not 
+test thoroughness.
+
+Two real bugs surfaced during the CI migration, worth noting since they 
+demonstrate why testing in a second, independent environment (not just 
+locally) matters: the `API_KEY` environment variable was scoped to a 
+single workflow step rather than the whole job, causing every TestClient-based 
+test to fail with 403 in CI despite passing locally; and a header name typo 
+(`X-API-key` instead of `X-API-Key`) in the smoke test caused it to send a 
+literal string "None" as the API key. Both fixed by setting `API_KEY` at 
+the job level in the GitHub Actions workflow and correcting the header name.
 
 ### Status
 

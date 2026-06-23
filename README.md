@@ -118,13 +118,20 @@ Interactive API documentation available at `http://127.0.0.1:8000/docs`
 
 ## Running the tests
 
-The server must be running before invoking pytest, since the API tests hit a live 
-server. Set `API_KEY` in your `.env` file (or inline) and use `test-secret-key` 
-as the value — that's what the test fixtures send in request headers.
+Most tests use FastAPI's TestClient and run in-process — no server needs 
+to be running first.
 
 ```bash
-uvicorn main:app &   # reads API_KEY from .env
 pytest tests/ -v
+```
+
+One test (`tests/test_smoke.py`) is a true end-to-end smoke test and 
+requires a live server running with `API_KEY` set:
+
+```bash
+export API_KEY=test-secret-key
+uvicorn main:app &
+pytest tests/test_smoke.py -v
 ```
 
 ## Status
